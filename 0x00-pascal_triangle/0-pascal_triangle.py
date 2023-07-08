@@ -22,7 +22,7 @@ def pascal_triangle(n):
                 b = pascal_triangle[i - 1][j - 1]
                 new_row[j] = a + b
 
-        pascal_triangle[i] = 
-new_row
+        pascal_triangle[i] = new_row
 
     return pascal_triangle
+
