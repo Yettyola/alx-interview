@@ -1,12 +1,25 @@
 #!/usr/bin/python3
+"""
+Lockboxes file
+"""
 
-canUnlockAll = __import__('0-lockboxes').canUnlockAll
 
-# boxes = [[1], [2], [3], [4], []]
-# print(canUnlockAll(boxes))
+def canUnlockAll(boxes):
+    """
+    a method that determines if all the boxes can be opened.
+    :param boxes:
+    :return: True if box can be opened and false if not
+    """
+    position = 0
+    unlocked = {}
 
-boxes = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
-print(canUnlockAll(boxes))
-
-# boxes = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
-# print(canUnlockAll(boxes))
+    for box in boxes:
+        if len(box) == 0 or position == 0:
+            unlocked[position] = "always_unlocked"
+        for key in box:
+            if key < len(boxes) and key != position:
+                unlocked[key] = key
+        if len(unlocked) == len(boxes):
+            return True
+        position += 1
+    return False
