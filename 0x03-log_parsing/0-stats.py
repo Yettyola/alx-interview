@@ -1,41 +1,37 @@
 #!/usr/bin/python3
+"""Log parsing"""
+
 import sys
-import math
 
-def calculate_statistics(numbers):
-    if not numbers:
-        print("Error: No numbers provided.")
-        return
-num_count = len(numbers)
-    sum_numbers = sum(numbers)
-    mean = sum_numbers / num_count
+if __name__ == '__main__':
 
-squared_diff_sum = sum((num - mean) ** 2 for num in numbers)
-    variance = squared_diff_sum / num_count
-    std_deviation = math.sqrt(variance)
-sorted_numbers = sorted(numbers)
-if num_count % 2 == 0:
-        median = (sorted_numbers[num_count // 2 - 1] + sorted_numbers[num_count // 2]) / 2
-    else:
-        median = sorted_numbers[num_count // 2]
-print(f"Count: {num_count}")
-    print(f"Sum: {sum_numbers}")
-    print(f"Mean: {mean}")
-    print(f"Variance: {variance}")
-    print(f"Standard Deviation: {std_deviation}")
-    print(f"Median: {median}")
+    filesize, count = 0, 0
+    codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
+    stats = {k: 0 for k in codes}
 
-def main():
+    def print_stats(stats: dict, file_size: int) -> None:
+        print("File size: {:d}".format(filesize))
+        for k, v in sorted(stats.items()):
+            if v:
+                print("{}: {}".format(k, v))
 
-try:
-    numbers = [float(num) for num in sys.stdin.read().strip().split()]
-        calculate_statistics(numbers)
-    except ValueError:
-	print("Error: Invalid input. Please provide a space-separated list of numbers.")
-
-if __name__ == "__main__":
-    main()
-
-
-
-
+    try:
+        for line in sys.stdin:
+            count += 1
+            data = line.split()
+            try:
+                status_code = data[-2]
+                if status_code in stats:
+                    stats[status_code] += 1
+            except BaseException:
+                pass
+            try:
+                filesize += int(data[-1])
+            except BaseException:
+                pass
+            if count % 10 == 0:
+                print_stats(stats, filesize)
+        print_stats(stats, filesize)
+    except KeyboardInterrupt:
+        print_stats(stats, filesize)
+        raise
